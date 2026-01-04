@@ -3,40 +3,118 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
+  id        String   @id @default(cuid())
+  email     String   @unique
   name      String?
-  password  String?
-  workouts  Workout[]
-  createdAt DateTime  @default(now())
-}
+  image     String?
+  bio       String?  @db.VarChar(500)
+  createdAt DateTime @default(now())
 
-model Workout {
-  id         String     @id @default(cuid())
-  title      String
-  user       User       @relation(fields: [userId], references: [id])
-  userId     String
-  exercises  Exercise[]
-  createdAt  DateTime   @default(now())
+  // Relations
+  workouts  Workout[]
+  following Follow[]  @relation("follower")
+  followers Follow[]  @relation("following")
+
+  // Indexes
+  @@index([name])
 }
 
 model Exercise {
+  id           String  @id @default(cuid())
+  name         String  @unique
+  category     String
+  muscleGroup  String
+  equipment    String?
+  diagramUrl   String
+  instructions String  @db.Text
+  tips         String?
+
+  // Relations
+  workoutExercises WorkoutExercise[]
+
+  // Indexes
+  @@index([category])
+}
+
+model Workout {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  date         DateTime  @default(now())
+  startTime    DateTime?
+  endTime      DateTime?
+  durationMins Int?
+  notes        String?   @db.VarChar(1000)
+  isCompleted  Boolean   @default(false)
+
+  // Relations
+  exercises WorkoutExercise[]
+
+  // Indexes
+  @@index([userId, date])
+  @@index([userId, isCompleted])
+  @@index([isCompleted, date])
+}
+
+model WorkoutExercise {
   id         String   @id @default(cuid())
-  name       String
-  workout    Workout  @relation(fields: [workoutId], references: [id])
   workoutId  String
-  sets       Set[]
+  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  order      Int
+
+  // Relations
+  sets Set[]
+
+  // Indexes
+  @@index([workoutId])
+  @@index([exerciseId])
 }
 
 model Set {
-  id         String  @id @default(cuid())
-  reps       Int
-  weight     Float?
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
-  exerciseId String
+  id                String          @id @default(cuid())
+  workoutExerciseId String
+  workoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
+  setNumber         Int
+  reps              Int
+  weight            Float
+  isWarmup          Boolean         @default(false)
+  rpe               Int?
+  isPersonalRecord  Boolean         @default(false)
+
+  // Indexes
+  @@index([workoutExerciseId])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  // Constraints & Indexes
+  @@unique([followerId, followingId])
+  @@index([followerId, createdAt(sort: Desc)])
+  @@index([followingId, createdAt(sort: Desc)])
+}
+
+model RateLimitLog {
+  id        String   @id @default(cuid())
+  ip        String
+  userId    String?
+  endpoint  String
+  blocked   Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([ip, createdAt])
 }
