@@ -1,3 +1,3 @@
-export async function getCached(key: string) {
+export async function getCached() {
   return null
 }

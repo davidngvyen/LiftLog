@@ -1,3 +1,3 @@
-import Redis from 'ioredis'
+import { Redis } from '@upstash/redis'
 
-export const redis = new Redis(process.env.REDIS_URL)
+export const redis = Redis.fromEnv()
