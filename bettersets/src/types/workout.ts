@@ -12,7 +12,7 @@ export type Exercise = {
 
 export type Workout = {
   id: string
-  title: string
+  name: string
   userId: string
   exercises: Exercise[]
   createdAt: string

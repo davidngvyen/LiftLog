@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist_Mono, Press_Start_2P } from "next/font/google"; // Added Press_Start_2P
 import "./globals.css";
 import { ReactNode } from "react";
-import Header from "@/components/layout/Header"; // Keeping header/footer for landing pages if needed, but dashboard has its own
-import Footer from "@/components/layout/Footer";
+// import Header from "@/components/layout/Header"; // Keeping header/footer for landing pages if needed, but dashboard has its own
+// import Footer from "@/components/layout/Footer";
 import { Toaster } from "sonner";
 
 const pressStart2P = Press_Start_2P({
