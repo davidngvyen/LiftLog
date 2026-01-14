@@ -42,7 +42,7 @@ export default function WorkoutPage() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [restTimer, setRestTimer] = useState(0);
   const [isResting, setIsResting] = useState(false);
-  const [selectedExercise, setSelectedExercise] = useState<any>(null);
+  const [selectedExercise, setSelectedExercise] = useState<{ id: string; name: string; category: string; equipment: string } | null>(null);
 
   useEffect(() => {
     if (startTime) {
@@ -75,7 +75,7 @@ export default function WorkoutPage() {
     setExercises([]);
   };
 
-  const addExercise = (exercise: any) => {
+  const addExercise = (exercise: { id: string; name: string }) => {
     setExercises([
       ...exercises,
       {
@@ -102,7 +102,7 @@ export default function WorkoutPage() {
     exerciseIndex: number,
     setIndex: number,
     field: keyof Set,
-    value: any
+    value: string | number | boolean
   ) => {
     const newExercises = [...exercises];
     newExercises[exerciseIndex].sets[setIndex] = {
@@ -308,7 +308,7 @@ export default function WorkoutPage() {
       {/* Add Exercise Button */}
       <Dialog open={!!selectedExercise} onOpenChange={() => setSelectedExercise(null)}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="w-full border-4 border-black h-12 dashed border-dashed uppercase hover:border-solid bg-white" onClick={() => setSelectedExercise({})}>
+          <Button variant="outline" className="w-full border-4 border-black h-12 dashed border-dashed uppercase hover:border-solid bg-white" onClick={() => setSelectedExercise({ id: "", name: "", category: "", equipment: "" })}>
             <Plus className="mr-2 h-4 w-4" /> Add Exercise
           </Button>
         </DialogTrigger>

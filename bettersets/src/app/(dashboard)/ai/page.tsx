@@ -13,7 +13,10 @@ export default function AIWorkoutPage() {
     const [experience, setExperience] = useState("intermediate");
     const [equipment, setEquipment] = useState("full gym");
     const [duration, setDuration] = useState("60");
-    const [generatedWorkout, setGeneratedWorkout] = useState<any>(null);
+    const [generatedWorkout, setGeneratedWorkout] = useState<{
+        name: string;
+        exercises: { exerciseName: string; sets: number; reps: number; restTime: number; notes: string }[];
+    } | null>(null);
     const [loading, setLoading] = useState(false);
 
     const generateWorkout = async () => {
@@ -171,7 +174,7 @@ export default function AIWorkoutPage() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {generatedWorkout.exercises.map((exercise: any, index: number) => (
+                        {generatedWorkout.exercises.map((exercise, index) => (
                             <div
                                 key={index}
                                 className="border-4 border-black bg-white p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"

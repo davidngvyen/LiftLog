@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TrendingUp, Trophy, Calendar } from "lucide-react";
+import { TrendingUp, Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 

@@ -1,17 +1,26 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Activity, Dumbbell, TrendingUp, Flame, Calendar, Zap, Target, Award, Star, Heart, Trophy, Sparkles } from "lucide-react";
+import { Dumbbell, TrendingUp, Flame, Zap, Target, Award, Star, Heart, Trophy, Sparkles } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 // import { toast } from "sonner"; // Use if configured
-import { CharacterAvatar } from "@/components/CharacterAvatar";
+import { CharacterAvatar, CharacterCustomization } from "@/components/CharacterAvatar";
 
 interface Stats {
   workoutCount: number;
   totalVolume: number;
   currentStreak: number;
   weeklyWorkouts: number;
-  recentWorkouts: any[];
+  recentWorkouts: {
+    id: string;
+    name: string;
+    exercises: unknown[];
+    duration: number;
+    totalVolume: number;
+    endTime: string;
+    createdAt?: string; // Add optional createdAt
+    isCompleted: boolean;
+  }[];
 }
 
 export default function DashboardPage() {
@@ -89,7 +98,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {user?.character ? (
-                <CharacterAvatar customization={user.character} size="md" />
+                <CharacterAvatar customization={user.character as CharacterCustomization} size="md" />
               ) : (
                 <div className="h-16 w-16 bg-gray-200 border-2 border-black flex items-center justify-center">
                   <span className="text-xs">NO AVATAR</span>
@@ -208,7 +217,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {stats?.recentWorkouts.map((workout: any) => (
+            {stats?.recentWorkouts.map((workout) => (
               <div
                 key={workout.id}
                 className="group flex items-center gap-4 border-4 border-black bg-gradient-to-r from-emerald-100 to-green-100 p-4 transition-all hover:translate-x-1 hover:translate-y-1"
@@ -228,7 +237,7 @@ export default function DashboardPage() {
                 <div className="text-right">
                   <p className="text-sm font-normal leading-relaxed text-green-600">💰 {formatVolume(workout.totalVolume)} LBS</p>
                   <p className="text-xs leading-relaxed text-muted-foreground">
-                    {new Date(workout.endTime || workout.createdAt).toLocaleDateString()}
+                    {new Date(workout.endTime || workout.createdAt || "").toLocaleDateString()}
                   </p>
                 </div>
               </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Dumbbell, Home, TrendingUp, Users, User, Sun, Moon } from "lucide-react";
+import { Dumbbell, Home, TrendingUp, Users, User } from "lucide-react";
 import { useApp } from "@/components/providers/AppProvider";
 
 export function MobileNav() {

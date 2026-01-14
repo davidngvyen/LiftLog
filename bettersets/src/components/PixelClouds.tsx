@@ -25,7 +25,7 @@ export function PixelClouds() {
                         animation: `float-cloud ${cloud.duration}s linear ${cloud.delay}s infinite`,
                     }}
                 >
-                    <PixelCloud size={cloud.size as any} />
+                    <PixelCloud size={cloud.size as "small" | "medium" | "large"} />
                 </div>
             ))}
             <style>{`

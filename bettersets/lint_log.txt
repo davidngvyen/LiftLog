@@ -1,0 +1,284 @@
+﻿
+> bettersets@0.1.0 lint
+> eslint
+
+
+C:\vsc\LiftLog\bettersets\dist-seed\seed.js
+  3:18  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\vsc\LiftLog\bettersets\src\app\(auth)\login\page.tsx
+  5:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\ai\page.tsx
+   16:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  174:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\dashboard\page.tsx
+    4:10  warning  'Activity' is defined but never used      @typescript-eslint/no-unused-vars
+    4:49  warning  'Calendar' is defined but never used      @typescript-eslint/no-unused-vars
+   14:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  211:50  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx
+  15:7   error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:15:7
+  13 |
+  14 |     return (
+> 15 |       <div className="space-y-6 pb-20 lg:pb-6">
+     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 16 |         {/* Header */}
+     | ^^^^^^^^^^^^^^^^^^^^^^
+> 17 |         <div className="border-4 border-black bg-gradient-to-r from-blue-500 to-cyan-500 p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^
+> 31 |         <ExerciseList initialExercises={exercises} />
+     | ^^^^^^^^^^^^^^^^^^^^^^
+> 32 |       </div>
+     | ^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  33 |     );
+  34 |   } catch (error) {
+  35 |     console.error("Failed to load exercises:", error);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/error-boundaries
+  17:9   error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:17:9
+  15 |       <div className="space-y-6 pb-20 lg:pb-6">
+  16 |         {/* Header */}
+> 17 |         <div className="border-4 border-black bg-gradient-to-r from-blue-500 to-cyan-500 p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 18 |           <div className="border-2 border-black bg-white p-4">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |             <div className="flex items-center gap-3">
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |           </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |         </div>
+     | ^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  30 |
+  31 |         <ExerciseList initialExercises={exercises} />
+  32 |       </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/error-boundaries
+  18:11  error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:18:11
+  16 |         {/* Header */}
+  17 |         <div className="border-4 border-black bg-gradient-to-r from-blue-500 to-cyan-500 p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+> 18 |           <div className="border-2 border-black bg-white p-4">
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |             <div className="flex items-center gap-3">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |               <div className="flex h-12 w-12 items-center justify-center border-4 border-black bg-gradient-to-br from-blue-400 to-cyan-400">
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |             </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |           </div>
+     | ^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  29 |         </div>
+  30 |
+  31 |         <ExerciseList initialExercises={exercises} />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/error-boundaries
+  19:13  error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:19:13
+  17 |         <div className="border-4 border-black bg-gradient-to-r from-blue-500 to-cyan-500 p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+  18 |           <div className="border-2 border-black bg-white p-4">
+> 19 |             <div className="flex items-center gap-3">
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |               <div className="flex h-12 w-12 items-center justify-center border-4 border-black bg-gradient-to-br from-blue-400 to-cyan-400">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 21 |                 <Sword className="h-6 w-6 text-white" />
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 22 |               </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |               <div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |                 <h1 className="text-xl uppercase leading-relaxed font-bold">ΓÜö∩╕Å SKILL LIBRARY</h1>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 25 |                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground font-semibold">BROWSE ALL BATTLE MOVES</p>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 26 |               </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |             </div>
+     | ^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  28 |           </div>
+  29 |         </div>
+  30 |  react-hooks/error-boundaries
+  20:15  error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:20:15
+  18 |           <div className="border-2 border-black bg-white p-4">
+  19 |             <div className="flex items-center gap-3">
+> 20 |               <div className="flex h-12 w-12 items-center justify-center border-4 border-black bg-gradient-to-br from-blue-400 to-cyan-400">
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 21 |                 <Sword className="h-6 w-6 text-white" />
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 22 |               </div>
+     | ^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  23 |               <div>
+  24 |                 <h1 className="text-xl uppercase leading-relaxed font-bold">ΓÜö∩╕Å SKILL LIBRARY</h1>
+  25 |                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground font-semibold">BROWSE ALL BATTLE MOVES</p>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/error-boundaries
+  21:17  error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:21:17
+  19 |             <div className="flex items-center gap-3">
+  20 |               <div className="flex h-12 w-12 items-center justify-center border-4 border-black bg-gradient-to-br from-blue-400 to-cyan-400">
+> 21 |                 <Sword className="h-6 w-6 text-white" />
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  22 |               </div>
+  23 |               <div>
+  24 |                 <h1 className="text-xl uppercase leading-relaxed font-bold">ΓÜö∩╕Å SKILL LIBRARY</h1>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/error-boundaries
+  23:15  error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:23:15
+  21 |                 <Sword className="h-6 w-6 text-white" />
+  22 |               </div>
+> 23 |               <div>
+     |               ^^^^^
+> 24 |                 <h1 className="text-xl uppercase leading-relaxed font-bold">ΓÜö∩╕Å SKILL LIBRARY</h1>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 25 |                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground font-semibold">BROWSE ALL BATTLE MOVES</p>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 26 |               </div>
+     | ^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  27 |             </div>
+  28 |           </div>
+  29 |         </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/error-boundaries
+  24:17  error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:24:17
+  22 |               </div>
+  23 |               <div>
+> 24 |                 <h1 className="text-xl uppercase leading-relaxed font-bold">ΓÜö∩╕Å SKILL LIBRARY</h1>
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  25 |                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground font-semibold">BROWSE ALL BATTLE MOVES</p>
+  26 |               </div>
+  27 |             </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/error-boundaries
+  25:17  error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:25:17
+  23 |               <div>
+  24 |                 <h1 className="text-xl uppercase leading-relaxed font-bold">ΓÜö∩╕Å SKILL LIBRARY</h1>
+> 25 |                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground font-semibold">BROWSE ALL BATTLE MOVES</p>
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  26 |               </div>
+  27 |             </div>
+  28 |           </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/error-boundaries
+  31:9   error  Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\exercises\page.tsx:31:9
+  29 |         </div>
+  30 |
+> 31 |         <ExerciseList initialExercises={exercises} />
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  32 |       </div>
+  33 |     );
+  34 |   } catch (error) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/error-boundaries
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\feed\page.tsx
+  14:11  warning  'user' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  15:48  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+  17:10  warning  'loading' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  21:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\feed\page.tsx:21:5
+  19 |   useEffect(() => {
+  20 |     // Mock data
+> 21 |     setActivities([
+     |     ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  22 |       {
+  23 |         id: "1",
+  24 |         user: { name: "GymBro99", image: null },  react-hooks/set-state-in-effect
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\profile\page.tsx
+    4:24  warning  'Dumbbell' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+    4:34  warning  'TrendingUp' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    8:10  warning  'Textarea' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   41:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\profile\page.tsx:41:13
+  39 |     useEffect(() => {
+  40 |         if (user) {
+> 41 |             setName(user.name);
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  42 |             setBio(user.bio || "");
+  43 |             if (user.character) setTempCustomization(user.character);
+  44 |         }  react-hooks/set-state-in-effect
+  320:5   warning  'color' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\progress\page.tsx
+  4:30  warning  'Calendar' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\vsc\LiftLog\bettersets\src\app\(dashboard)\workouts\page.tsx
+   45:60  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  105:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\vsc\LiftLog\bettersets\src\app\page.tsx
+  4:20  warning  'Chrome' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\vsc\LiftLog\bettersets\src\components\PixelClouds.tsx
+  28:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\vsc\LiftLog\bettersets\src\components\layout\MobileNav.tsx
+  5:51  warning  'Sun' is defined but never used   @typescript-eslint/no-unused-vars
+  5:56  warning  'Moon' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\vsc\LiftLog\bettersets\src\components\providers\AppProvider.tsx
+   4:10  warning  'toast' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  16:17  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  22:34  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  38:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\vsc\LiftLog\bettersets\src\components\providers\AppProvider.tsx:38:9
+  36 |     const [isLoading, setIsLoading] = useState(!initialUser);
+  37 |     useEffect(() => {
+> 38 |         setIsLoading(false);
+     |         ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  39 |     }, []);
+  40 |
+  41 |     const updateCharacter = (character: any) => {  react-hooks/set-state-in-effect
+  41:41  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+
+C:\vsc\LiftLog\bettersets\src\middleware.ts
+  4:28  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 41 problems (26 errors, 15 warnings)
+

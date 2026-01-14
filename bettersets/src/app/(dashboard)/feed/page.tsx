@@ -1,33 +1,31 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+
+import React, { useState } from "react";
 import { Heart, MessageCircle, Dumbbell, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useApp } from "@/components/providers/AppProvider";
+
 // import { toast } from "sonner"; 
 
 // Use shadcn components or custom styled ones. 
 // The user code uses custom styles heavily, so we'll adapt.
 
 export default function SocialFeedPage() {
-  const { user } = useApp();
-  const [activities, setActivities] = useState<any[]>([]);
+  const [activities] = useState<{
+    id: string;
+    user: { name: string; image: string | null };
+    workout: { name: string; exerciseCount: number; duration: number; totalVolume: number };
+    createdAt: string;
+  }[]>([
+    {
+      id: "1",
+      user: { name: "GymBro99", image: null },
+      workout: { name: "Chest Day", exerciseCount: 5, duration: 3600000, totalVolume: 12000 },
+      createdAt: new Date().toISOString()
+    }
+  ]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Mock data
-    setActivities([
-      {
-        id: "1",
-        user: { name: "GymBro99", image: null },
-        workout: { name: "Chest Day", exerciseCount: 5, duration: 3600000, totalVolume: 12000 },
-        createdAt: new Date().toISOString()
-      }
-    ]);
-    setLoading(false);
-  }, []);
 
   const formatDuration = (ms: number) => {
     const minutes = Math.floor(ms / 60000);

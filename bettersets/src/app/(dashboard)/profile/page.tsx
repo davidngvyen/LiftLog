@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { LogOut, Edit, Dumbbell, TrendingUp, Palette, Trophy } from "lucide-react";
+import { LogOut, Edit, Palette, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"; // Assuming I have this component, or use native
 import { useApp } from "@/components/providers/AppProvider";
 import { signOut } from "next-auth/react";
 // import { toast } from "sonner";
@@ -26,7 +25,7 @@ export default function ProfilePage() {
     const [name, setName] = useState(user?.name || "");
     const [bio, setBio] = useState(user?.bio || "");
     const [tempCustomization, setTempCustomization] = useState<CharacterCustomization>(
-        user?.character || {
+        (user?.character as CharacterCustomization) || {
             skinColor: "#ffd5b5",
             hairStyle: "short",
             hairColor: "#654321",
@@ -36,13 +35,7 @@ export default function ProfilePage() {
     );
 
     // Sync state with user context if it loads late
-    useEffect(() => {
-        if (user) {
-            setName(user.name);
-            setBio(user.bio || "");
-            if (user.character) setTempCustomization(user.character);
-        }
-    }, [user]);
+
 
     const userLevel = Math.floor((user?.workoutCount || 0) / 5) + 1;
 
@@ -66,7 +59,7 @@ export default function ProfilePage() {
     };
 
     return (
-        <div className="space-y-6 pb-20 lg:pb-6">
+        <div key={user?.id || 'loading'} className="space-y-6 pb-20 lg:pb-6">
             {/* Character Customization Header */}
             <div className="border-4 border-black bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
                 <div className="border-2 border-black bg-white p-6">
@@ -285,24 +278,20 @@ export default function ProfilePage() {
                     <StatCard
                         title="🎯 QUESTS"
                         value={user?.workoutCount || 0}
-                        color="bg-orange-500"
                     />
                     <StatCard
                         title="💪 POWER"
                         value={formatVolume(user?.totalVolume || 0)}
                         unit="LBS"
-                        color="bg-yellow-400"
                     />
                     <StatCard
                         title="🔥 STREAK"
                         value={user?.currentStreak || 0}
                         unit="DAYS"
-                        color="bg-red-500"
                     />
                     <StatCard
                         title="👥 FRIENDS"
                         value={stats?.followersCount || 0}
-                        color="bg-green-500"
                     />
                 </div>
             </div>
@@ -317,12 +306,10 @@ function StatCard({
     title,
     value,
     unit,
-    color,
 }: {
     title: string;
     value: string | number;
     unit?: string;
-    color: string;
 }) {
     return (
         <div className="border-4 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">

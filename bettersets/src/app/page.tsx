@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dumbbell, Chrome } from "lucide-react"; // using Chrome icon as Google proxy if needed, or just text
+import { Dumbbell } from "lucide-react"; // using Chrome icon as Google proxy if needed, or just text
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
