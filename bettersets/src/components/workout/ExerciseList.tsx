@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Search, Sword } from "lucide-react";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import type { Exercise } from "@prisma/client";
 
@@ -52,9 +53,10 @@ export default function ExerciseList({ initialExercises }: ExerciseListProps) {
       {/* Exercise List */}
       <div className="space-y-3">
         {filteredExercises.map((exercise) => (
-          <div
+          <Link
             key={exercise.id}
-            className="border-4 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            href={`/exercises/${exercise.id}`}
+            className="block border-4 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           >
             <div className="flex items-center gap-4">
               <div className={`flex h-14 w-14 shrink-0 items-center justify-center border-4 border-black ${categoryColors[exercise.muscleGroup] || categoryColors[exercise.category] || 'bg-gray-400'}`}>
@@ -77,7 +79,7 @@ export default function ExerciseList({ initialExercises }: ExerciseListProps) {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
         {filteredExercises.length === 0 && (
           <div className="p-8 text-center border-4 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
