@@ -95,10 +95,83 @@ export async function createWorkout(userId: string, data: CreateWorkoutInput) {
             }
         })
 
+
         revalidatePath('/workouts')
         return workout
     } catch (error) {
         console.error('Error creating workout:', error)
         throw error // Re-throw to handle in UI
+    }
+}
+
+export async function updateWorkout(userId: string, data: { id: string } & Partial<CreateWorkoutInput>) {
+    try {
+        // Transaction to ensure atomicity
+        const workout = await prisma.$transaction(async (tx) => {
+            // 1. Update basic info
+            const updated = await tx.workout.update({
+                where: { id: data.id, userId },
+                data: {
+                    name: data.name,
+                    date: data.date,
+                    notes: data.notes,
+                    startTime: data.startTime,
+                    endTime: data.endTime,
+                }
+            })
+
+            // 2. If exercises are provided, replace them entirely
+            // This is a simple strategy: delete all existing exercises and re-create
+            if (data.exercises) {
+                await tx.workoutExercise.deleteMany({
+                    where: { workoutId: data.id }
+                })
+
+                for (const exercise of data.exercises) {
+                    await tx.workoutExercise.create({
+                        data: {
+                            workoutId: data.id,
+                            exerciseId: exercise.exerciseId,
+                            order: exercise.order,
+                            sets: {
+                                create: exercise.sets.map(set => ({
+                                    setNumber: set.setNumber,
+                                    reps: set.reps,
+                                    weight: set.weight,
+                                    isWarmup: set.isWarmup,
+                                    rpe: set.rpe,
+                                }))
+                            }
+                        }
+                    })
+                }
+            }
+
+            return updated
+        })
+
+        revalidatePath('/workouts')
+        revalidatePath(`/workouts/${data.id}`)
+        return workout
+    } catch (error) {
+        console.error('Error updating workout:', error)
+        throw error
+    }
+}
+
+export async function deleteWorkout(userId: string, workoutId: string) {
+    try {
+        await prisma.workout.delete({
+            where: {
+                id: workoutId,
+                userId, // Ensure ownership
+            }
+        })
+
+        revalidatePath('/workouts')
+        return { success: true }
+    } catch (error) {
+        console.error('Error deleting workout:', error)
+        throw error
     }
 }

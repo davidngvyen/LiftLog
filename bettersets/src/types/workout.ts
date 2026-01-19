@@ -39,3 +39,7 @@ export type CreateWorkoutInput = {
     notes?: string
     exercises: CreateWorkoutExerciseInput[]
 }
+
+export type UpdateWorkoutInput = Partial<CreateWorkoutInput> & {
+    id: string
+}
