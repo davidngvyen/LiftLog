@@ -23,7 +23,7 @@ const setSchema = z.object({
     reps: z.number().min(0, "Reps must be positive"),
     weight: z.number().min(0, "Weight must be positive"),
     rpe: z.number().optional(),
-    isWarmup: z.boolean().default(false),
+    isWarmup: z.boolean(),
 })
 
 const exerciseSchema = z.object({
@@ -33,7 +33,7 @@ const exerciseSchema = z.object({
     sets: z.array(setSchema).min(1, "At least one set is required"),
 })
 
-const formSchema = z.object({
+export const formSchema = z.object({
     name: z.string().min(2, "Workout name must be at least 2 characters."),
     date: z.string().refine((val) => !isNaN(Date.parse(val)), {
         message: "Invalid date"
@@ -166,7 +166,7 @@ export default function WorkoutForm({ userId, exercises: allExercises }: Workout
                     {fields.length === 0 ? (
                         <div className="text-center py-12 border-2 border-dashed rounded-xl opacity-50">
                             <p>No exercises added yet.</p>
-                            <p className="text-sm">Click "Add Exercise" to get started.</p>
+                            <p className="text-sm">Click &quot;Add Exercise&quot; to get started.</p>
                         </div>
                     ) : (
                         fields.map((field, index) => (

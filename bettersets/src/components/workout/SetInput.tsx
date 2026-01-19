@@ -7,10 +7,13 @@ import { Label } from "@/components/ui/label"
 import { Trash2, Plus, Copy } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+import { formSchema } from "./WorkoutForm"
+import * as z from "zod"
+
 // Needs to match the form schema in WorkoutForm
 // exercises[exerciseIndex].sets
 interface SetInputProps {
-    form: UseFormReturn<any>
+    form: UseFormReturn<z.infer<typeof formSchema>>
     exerciseIndex: number
 }
 
