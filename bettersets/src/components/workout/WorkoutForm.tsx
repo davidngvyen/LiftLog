@@ -7,16 +7,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
-// import { format } from "date-fns" // Removed date-fns usage for input type=date
 import { Loader2, Trash2 } from "lucide-react"
 import { useState } from "react"
-import { createWorkout } from "@/services/workout.service"
+import { createWorkout, updateWorkout } from "@/services/workout.service"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Exercise } from "@prisma/client"
 import ExercisePicker from "./ExercisePicker"
 import SetInput from "./SetInput"
+import { WorkoutWithExercises } from "@/types/workout"
 
 const setSchema = z.object({
     setNumber: z.number(),
@@ -37,7 +36,7 @@ export const formSchema = z.object({
     name: z.string().min(2, "Workout name must be at least 2 characters."),
     date: z.string().refine((val) => !isNaN(Date.parse(val)), {
         message: "Invalid date"
-    }), // Changed to string for native input
+    }),
     notes: z.string().optional(),
     exercises: z.array(exerciseSchema),
 })
@@ -45,19 +44,33 @@ export const formSchema = z.object({
 interface WorkoutFormProps {
     userId: string
     exercises: Exercise[]
+    initialData?: WorkoutWithExercises
+    onCancel?: () => void
+    onSuccess?: (workout: WorkoutWithExercises) => void
 }
 
-export default function WorkoutForm({ userId, exercises: allExercises }: WorkoutFormProps) {
+export default function WorkoutForm({ userId, exercises: allExercises, initialData, onCancel, onSuccess }: WorkoutFormProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            date: new Date().toISOString().split('T')[0],
-            notes: "",
-            exercises: [],
+            name: initialData?.name || "",
+            date: initialData?.date ? new Date(initialData.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            notes: initialData?.notes || "",
+            exercises: initialData?.exercises.map(ex => ({
+                exerciseId: ex.exerciseId,
+                name: ex.exercise.name,
+                muscleGroup: ex.exercise.muscleGroup,
+                sets: ex.sets.map(s => ({
+                    setNumber: s.setNumber,
+                    reps: s.reps,
+                    weight: s.weight,
+                    rpe: s.rpe ?? undefined,
+                    isWarmup: s.isWarmup
+                }))
+            })) || [],
         },
     })
 
@@ -67,11 +80,6 @@ export default function WorkoutForm({ userId, exercises: allExercises }: Workout
         control: form.control,
         name: "exercises",
     })
-
-    // We need to keep track of exercise details for display purposes since useFieldArray only keeps the values in form state
-    // Actually fields contains the default values, but controlled inputs update the form state.
-    // We can just rely on the form state values or the fields if they are static.
-    // We'll store name/muscleGroup in hidden fields or just sync them. Schema has them so they are in 'fields'.
 
     const addExercise = (exercise: Exercise) => {
         append({
@@ -87,7 +95,7 @@ export default function WorkoutForm({ userId, exercises: allExercises }: Workout
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsSubmitting(true)
         try {
-            await createWorkout(userId, {
+            const workoutData = {
                 name: values.name,
                 date: new Date(values.date),
                 notes: values.notes,
@@ -99,13 +107,29 @@ export default function WorkoutForm({ userId, exercises: allExercises }: Workout
                         setNumber: setIndex + 1,
                     }))
                 }))
-            })
+            }
 
-            toast.success("Workout created successfully!")
-            router.push("/workouts")
-            router.refresh()
+            let result: WorkoutWithExercises
+
+            if (initialData) {
+                result = await updateWorkout(userId, {
+                    id: initialData.id,
+                    ...workoutData
+                }) as unknown as WorkoutWithExercises // Cast for now as types might be slightly off in return
+            } else {
+                result = await createWorkout(userId, workoutData) as unknown as WorkoutWithExercises
+            }
+
+            toast.success(initialData ? "Workout updated successfully!" : "Workout created successfully!")
+
+            if (onSuccess) {
+                onSuccess(result)
+            } else {
+                router.push("/workouts")
+                router.refresh()
+            }
         } catch (error) {
-            toast.error("Failed to create workout.")
+            toast.error(initialData ? "Failed to update workout." : "Failed to create workout.")
             console.error(error)
         } finally {
             setIsSubmitting(false)
@@ -202,12 +226,12 @@ export default function WorkoutForm({ userId, exercises: allExercises }: Workout
 
             {/* Footer Actions */}
             <div className="flex justify-end gap-4 pt-4">
-                <Button type="button" variant="outline" onClick={() => router.back()}>
+                <Button type="button" variant="outline" onClick={onCancel ? onCancel : () => router.back()}>
                     Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmitting} size="lg">
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Save Workout
+                    {initialData ? "Save Changes" : "Save Workout"}
                 </Button>
             </div>
 

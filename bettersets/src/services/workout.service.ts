@@ -147,7 +147,25 @@ export async function updateWorkout(userId: string, data: { id: string } & Parti
                 }
             }
 
-            return updated
+            // 3. Fetch the complete workout with new exercises
+            return await tx.workout.findUnique({
+                where: { id: data.id },
+                include: {
+                    exercises: {
+                        include: {
+                            exercise: true,
+                            sets: {
+                                orderBy: {
+                                    setNumber: 'asc',
+                                },
+                            },
+                        },
+                        orderBy: {
+                            order: 'asc',
+                        },
+                    },
+                },
+            })
         })
 
         revalidatePath('/workouts')
