@@ -40,12 +40,12 @@ export default function ExercisePicker({ exercises, onSelect, children }: Exerci
             <DialogTrigger asChild>
                 {children || <Button variant="outline">Add Exercise</Button>}
             </DialogTrigger>
-            <DialogContent className="w-[95vw] min-w-0 sm:w-full sm:max-w-screen-xl max-h-[85vh] h-[80vh] flex flex-col p-0 gap-0 overflow-hidden">
-                <DialogHeader className="p-4 sm:p-6 pb-2">
-                    <DialogTitle className="truncate">Select Exercise</DialogTitle>
+            <DialogContent className="w-[calc(100vw-2rem)] sm:w-full sm:max-w-lg max-h-[85vh] h-[75vh] flex flex-col p-0 gap-0 overflow-hidden">
+                <DialogHeader className="p-3 sm:p-4 pb-2 shrink-0">
+                    <DialogTitle>Select Exercise</DialogTitle>
                 </DialogHeader>
 
-                <div className="px-4 sm:px-6 py-2 space-y-4 border-b">
+                <div className="px-3 sm:px-4 py-2 space-y-3 border-b shrink-0">
                     <div className="relative">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -105,7 +105,7 @@ export default function ExercisePicker({ exercises, onSelect, children }: Exerci
                         </div>
                     )}
                 </div>
-            </DialogContent>
-        </Dialog>
+            </DialogContent >
+        </Dialog >
     )
 }

@@ -29,7 +29,7 @@ export default async function WorkoutsPage() {
             View your workout history and plan upcoming sessions.
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="w-full sm:w-auto min-h-[44px]">
           <Link href="/workouts/new">
             <Plus className="mr-2 h-4 w-4" />
             New Workout

@@ -67,7 +67,7 @@ function MobileNavItem({
     return (
         <Link
             href={href}
-            className={`flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 transition-all ${active ? "text-primary" : "text-muted-foreground"
+            className={`flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2 min-h-[44px] min-w-[44px] transition-all ${active ? "text-primary" : "text-muted-foreground"
                 }`}
         >
             <Icon className="h-6 w-6" strokeWidth={active ? 2.5 : 2} />

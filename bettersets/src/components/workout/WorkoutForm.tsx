@@ -178,12 +178,14 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
 
             {/* Exercises Section */}
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
                         <h2 className="text-xl font-semibold">Exercises</h2>
                         <p className="text-sm text-muted-foreground">Add exercises and log your sets.</p>
                     </div>
-                    <ExercisePicker exercises={allExercises} onSelect={addExercise} />
+                    <ExercisePicker exercises={allExercises} onSelect={addExercise}>
+                        <Button variant="outline" className="w-full sm:w-auto min-h-[44px]">Add Exercise</Button>
+                    </ExercisePicker>
                 </div>
 
                 <div className="space-y-4">

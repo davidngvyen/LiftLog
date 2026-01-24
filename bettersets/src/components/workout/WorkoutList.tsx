@@ -52,7 +52,7 @@ export default function WorkoutList({ workouts }: WorkoutListProps) {
                 <p className="text-muted-foreground max-w-sm mb-6">
                     You haven't logged any workouts yet. Start your journey by creating your first workout!
                 </p>
-                <Button asChild>
+                <Button asChild className="w-full sm:w-auto min-h-[44px]">
                     <Link href="/workouts/new">
                         <Plus className="mr-2 h-4 w-4" />
                         Create First Workout
@@ -71,21 +71,21 @@ export default function WorkoutList({ workouts }: WorkoutListProps) {
                     <div className="flex gap-2">
                         <Badge
                             variant={statusFilter === 'ALL' ? 'default' : 'outline'}
-                            className="cursor-pointer hover:bg-primary/80"
+                            className="cursor-pointer hover:bg-primary/80 min-h-[44px] flex items-center"
                             onClick={() => setStatusFilter('ALL')}
                         >
                             All
                         </Badge>
                         <Badge
                             variant={statusFilter === 'COMPLETED' ? 'default' : 'outline'}
-                            className="cursor-pointer hover:bg-primary/80"
+                            className="cursor-pointer hover:bg-primary/80 min-h-[44px] flex items-center"
                             onClick={() => setStatusFilter('COMPLETED')}
                         >
                             Completed
                         </Badge>
                         <Badge
                             variant={statusFilter === 'PLANNED' ? 'default' : 'outline'}
-                            className="cursor-pointer hover:bg-primary/80"
+                            className="cursor-pointer hover:bg-primary/80 min-h-[44px] flex items-center"
                             onClick={() => setStatusFilter('PLANNED')}
                         >
                             Planned
@@ -113,7 +113,7 @@ export default function WorkoutList({ workouts }: WorkoutListProps) {
                     No workouts match your filters.
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {filteredAndSortedWorkouts.map((workout) => (
                         <WorkoutCard key={workout.id} workout={workout} />
                     ))}

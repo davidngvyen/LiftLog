@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 import { Trophy } from "lucide-react"
 import { WorkoutWithExercises } from "@/types/workout"
 import { cn } from "@/lib/utils"
@@ -51,8 +52,9 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
   // -------------------------------------------------------------------------
 
   return (
-    <div
-      className="group flex items-center gap-4 border-4 border-black bg-gradient-to-r from-emerald-100 to-green-100 p-4 transition-all hover:translate-x-1 hover:translate-y-1"
+    <Link
+      href={`/workouts/${workout.id}`}
+      className="group flex items-center gap-4 border-4 border-black bg-gradient-to-r from-emerald-100 to-green-100 p-4 min-h-[44px] transition-all hover:translate-x-1 hover:translate-y-1"
     >
       {/* ICON SECTION */}
       <div className="flex h-14 w-14 shrink-0 items-center justify-center border-4 border-black bg-gradient-to-br from-yellow-300 to-yellow-500">
@@ -61,7 +63,7 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
 
       {/* CONTENT SECTION */}
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* 1. Render Name */}
           <h3 className="text-sm font-bold uppercase leading-relaxed truncate">
             QUEST: {workout.name}
@@ -82,7 +84,7 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
       </div>
 
       {/* STATS SECTION (Right side) */}
-      <div className="text-right">
+      <div className="text-right hidden sm:block">
         {/* 1. Render Volume */}
         <p className="text-sm font-normal leading-relaxed text-green-600">
           💰 {totalVolume} LBS
@@ -93,6 +95,6 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
           {new Date(workout.date || new Date()).toLocaleDateString()}
         </p>
       </div>
-    </div>
+    </Link>
   )
 }
