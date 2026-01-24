@@ -89,7 +89,7 @@ export default function ExercisePicker({ exercises, onSelect, children }: Exerci
                                 <button
                                     key={exercise.id}
                                     onClick={() => handleSelect(exercise)}
-className="w-13/20 sm:w-full max-w-full min-w-0 flex items-center justify-between p-2 sm:p-4 rounded-lg border hover:border-primary hover:bg-accent/50 transition-colors text-left group"
+                                    className="w-full max-w-full min-w-0 flex items-center justify-between p-2 sm:p-4 rounded-lg border hover:border-primary hover:bg-accent/50 transition-colors text-left group"
                                 >
                                     <div className="min-w-0 flex-1 mr-2 sm:mr-4">
                                         <h4 className="font-semibold text-sm sm:text-base break-words leading-tight">{exercise.name}</h4>

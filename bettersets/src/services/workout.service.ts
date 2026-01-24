@@ -3,33 +3,36 @@
 import { prisma } from '@/lib/db'
 import { CreateWorkoutInput, workoutWithExercises } from '@/types/workout'
 import { revalidatePath } from 'next/cache'
+import { CacheService } from './cache.service'
 
 export async function getWorkouts(userId: string) {
-    try {
-        const workouts = await prisma.workout.findMany({
-            where: {
-                userId,
-            },
-            include: {
-                exercises: {
-                    include: {
-                        exercise: true,
-                        sets: true
-                    },
-                    orderBy: {
-                        order: 'asc'
+    return CacheService.getWorkouts(userId, async () => {
+        try {
+            const workouts = await prisma.workout.findMany({
+                where: {
+                    userId,
+                },
+                include: {
+                    exercises: {
+                        include: {
+                            exercise: true,
+                            sets: true
+                        },
+                        orderBy: {
+                            order: 'asc'
+                        }
                     }
-                }
-            },
-            orderBy: {
-                date: 'desc',
-            },
-        })
-        return workouts
-    } catch (error) {
-        console.error('Error fetching workouts:', error)
-        return []
-    }
+                },
+                orderBy: {
+                    date: 'desc',
+                },
+            })
+            return workouts
+        } catch (error) {
+            console.error('Error fetching workouts:', error)
+            return []
+        }
+    })
 }
 
 export async function getWorkoutById(id: string) {
@@ -97,6 +100,7 @@ export async function createWorkout(userId: string, data: CreateWorkoutInput) {
 
 
         revalidatePath('/workouts')
+        await CacheService.invalidateWorkouts(userId)
         return workout
     } catch (error) {
         console.error('Error creating workout:', error)
@@ -170,6 +174,7 @@ export async function updateWorkout(userId: string, data: { id: string } & Parti
 
         revalidatePath('/workouts')
         revalidatePath(`/workouts/${data.id}`)
+        await CacheService.invalidateWorkouts(userId)
         return workout
     } catch (error) {
         console.error('Error updating workout:', error)
@@ -187,6 +192,7 @@ export async function deleteWorkout(userId: string, workoutId: string) {
         })
 
         revalidatePath('/workouts')
+        await CacheService.invalidateWorkouts(userId)
         return { success: true }
     } catch (error) {
         console.error('Error deleting workout:', error)
