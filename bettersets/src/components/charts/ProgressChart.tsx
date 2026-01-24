@@ -13,39 +13,20 @@ import {
 } from "recharts"
 import { Star } from "lucide-react"
 
-interface ProgressDataPoint {
-    date: string
-    weight: number
-    reps: number
-    volume: number
-    isPr: boolean
+export interface ProgressDataPoint {
+    date: string | Date
+    maxWeight: number
+    totalVolume: number
+    estimated1RM: number
 }
 
 interface ProgressChartProps {
     data: ProgressDataPoint[]
+    metric?: 'maxWeight' | 'estimated1RM'
 }
 
 const CustomDot = (props: DotProps & { payload?: ProgressDataPoint }) => {
-    const { cx, cy, payload } = props
-
-    if (payload?.isPr) {
-        return (
-            <svg
-                x={(cx || 0) - 10}
-                y={(cy || 0) - 10}
-                width={20}
-                height={20}
-                viewBox="0 0 24 24"
-                fill="#fbbf24" // warning color (yellow/amber)
-                stroke="#fbbf24"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            >
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-        )
-    }
+    const { cx, cy } = props
 
     return (
         <circle
@@ -70,7 +51,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
                             Date
                         </span>
                         <span className="font-bold text-muted-foreground">
-                            {label}
+                            {new Date(label).toLocaleDateString()}
                         </span>
                     </div>
                     <div className="flex flex-col">
@@ -78,15 +59,15 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
                             Weight
                         </span>
                         <span className="font-bold text-foreground">
-                            {data.weight} lbs
+                            {data.maxWeight} lbs
                         </span>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-[0.70rem] uppercase text-muted-foreground">
-                            Reps
+                            Est. 1RM
                         </span>
-                        <span className="font-bold text-muted-foreground">
-                            {data.reps}
+                        <span className="font-bold text-foreground">
+                            {Math.round(data.estimated1RM)} lbs
                         </span>
                     </div>
                     <div className="flex flex-col">
@@ -94,16 +75,10 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
                             Volume
                         </span>
                         <span className="font-bold text-muted-foreground">
-                            {data.volume} lbs
+                            {data.totalVolume} lbs
                         </span>
                     </div>
                 </div>
-                {data.isPr && (
-                    <div className="mt-2 flex items-center gap-1 text-xs font-medium text-warning">
-                        <Star className="h-3 w-3 fill-current" />
-                        Personal Record
-                    </div>
-                )}
             </div>
         )
     }
@@ -111,7 +86,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
     return null
 }
 
-export function ProgressChart({ data }: ProgressChartProps) {
+export function ProgressChart({ data, metric = 'maxWeight' }: ProgressChartProps) {
     return (
         <ResponsiveContainer width="100%" height={350}>
             <LineChart data={data}>
@@ -122,6 +97,7 @@ export function ProgressChart({ data }: ProgressChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
+                    tickFormatter={(value) => new Date(value).toLocaleDateString()}
                 />
                 <YAxis
                     stroke="#888888"
@@ -133,7 +109,7 @@ export function ProgressChart({ data }: ProgressChartProps) {
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
                 <Line
                     type="monotone"
-                    dataKey="weight"
+                    dataKey={metric}
                     stroke="var(--color-primary)"
                     strokeWidth={2}
                     dot={<CustomDot />}

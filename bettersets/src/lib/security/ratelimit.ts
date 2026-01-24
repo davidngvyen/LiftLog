@@ -30,7 +30,7 @@ const limiters: {
   ip: Record<RateLimitCategory, Ratelimit> | null
   user: Record<RateLimitCategory, Ratelimit | null> | null
 } = redis
-  ? {
+    ? {
       ip: Object.fromEntries(
         Object.entries(RATE_LIMITS).map(([category, config]) => [
           category,
@@ -46,18 +46,18 @@ const limiters: {
           category,
           'user' in config && config.user
             ? new Ratelimit({
-                redis,
-                limiter: Ratelimit.fixedWindow(
-                  config.user.limit,
-                  config.user.window
-                ),
-                prefix: `rl:user:${category}`,
-              })
+              redis,
+              limiter: Ratelimit.fixedWindow(
+                config.user.limit,
+                config.user.window
+              ),
+              prefix: `rl:user:${category}`,
+            })
             : null,
         ])
       ) as Record<RateLimitCategory, Ratelimit | null>,
     }
-  : { ip: null, user: null }
+    : { ip: null, user: null }
 
 function getIp(req: Request): string {
   const forwardedFor = req.headers.get('x-forwarded-for')
@@ -118,19 +118,25 @@ export async function enforceRateLimit(params: {
     return null
   }
 
-  const ipKey = getIp(params.req)
-  const ipResult = await limiters.ip[params.category].limit(ipKey)
+  try {
+    const ipKey = getIp(params.req)
+    const ipResult = await limiters.ip[params.category].limit(ipKey)
 
-  if (!ipResult.success) {
-    return rateLimitExceededResponse(ipResult)
-  }
+    if (!ipResult.success) {
+      return rateLimitExceededResponse(ipResult)
+    }
 
-  const userLimiter = limiters.user?.[params.category] ?? null
-  if (!userLimiter || !params.userId) return null
+    const userLimiter = limiters.user?.[params.category] ?? null
+    if (!userLimiter || !params.userId) return null
 
-  const userResult = await userLimiter.limit(params.userId)
-  if (!userResult.success) {
-    return rateLimitExceededResponse(userResult)
+    const userResult = await userLimiter.limit(params.userId)
+    if (!userResult.success) {
+      return rateLimitExceededResponse(userResult)
+    }
+  } catch (error) {
+    console.error('Rate limit checking failed (failing open):', error)
+    // Fail open so we don't block requests if Redis is down/misconfigured
+    return null
   }
 
   return null
