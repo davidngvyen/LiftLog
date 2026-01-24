@@ -2,12 +2,11 @@
 
 import { Exercise } from '@prisma/client'
 import { useState } from 'react'
-import { Check, Search } from 'lucide-react'
+import { Check, Search, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
 
 interface ExercisePickerProps {
     exercises: Exercise[]
@@ -40,26 +39,32 @@ export default function ExercisePicker({ exercises, onSelect, children }: Exerci
             <DialogTrigger asChild>
                 {children || <Button variant="outline">Add Exercise</Button>}
             </DialogTrigger>
-            <DialogContent className="w-[calc(100vw-2rem)] sm:w-full sm:max-w-lg max-h-[85vh] h-[75vh] flex flex-col p-0 gap-0 overflow-hidden">
-                <DialogHeader className="p-3 sm:p-4 pb-2 shrink-0">
-                    <DialogTitle>Select Exercise</DialogTitle>
+            <DialogContent className="flex flex-col gap-0 p-0 sm:max-w-md w-full h-[100dvh] sm:h-[80vh] max-w-none rounded-none sm:rounded-xl overflow-hidden">
+                <DialogHeader className="px-4 py-3 border-b flex flex-row items-center justify-between shrink-0">
+                    <DialogTitle className="text-base font-semibold">Add Exercise</DialogTitle>
+                    <DialogClose asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                            <X className="h-4 w-4" />
+                            <span className="sr-only">Close</span>
+                        </Button>
+                    </DialogClose>
                 </DialogHeader>
 
-                <div className="px-3 sm:px-4 py-2 space-y-3 border-b shrink-0">
+                <div className="px-4 py-3 space-y-3 border-b bg-muted/20 shrink-0">
                     <div className="relative">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
-                            placeholder="Search by name or muscle..."
+                            placeholder="Search..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pl-9"
+                            className="pl-9 bg-background"
                         />
                     </div>
 
-                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+                    <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-none">
                         <Badge
                             variant={selectedCategory === null ? 'default' : 'outline'}
-                            className="cursor-pointer whitespace-nowrap"
+                            className="cursor-pointer whitespace-nowrap shrink-0 min-h-[32px] flex items-center"
                             onClick={() => setSelectedCategory(null)}
                         >
                             All
@@ -68,7 +73,7 @@ export default function ExercisePicker({ exercises, onSelect, children }: Exerci
                             <Badge
                                 key={cat}
                                 variant={selectedCategory === cat ? 'default' : 'outline'}
-                                className="cursor-pointer whitespace-nowrap"
+                                className="cursor-pointer whitespace-nowrap shrink-0 min-h-[32px] flex items-center"
                                 onClick={() => setSelectedCategory(cat)}
                             >
                                 {cat}
@@ -77,35 +82,38 @@ export default function ExercisePicker({ exercises, onSelect, children }: Exerci
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-1 sm:p-2">
+                <div className="flex-1 overflow-y-auto p-2 sm:p-4">
                     {filteredExercises.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-40 text-muted-foreground p-4 text-center">
                             <Search className="h-8 w-8 mb-2 opacity-20" />
                             <p>No exercises found.</p>
                         </div>
                     ) : (
-                        <div className="grid gap-1 sm:gap-2">
+                        <div className="grid gap-2">
                             {filteredExercises.map(exercise => (
                                 <button
                                     key={exercise.id}
+                                    type="button"
                                     onClick={() => handleSelect(exercise)}
-                                    className="w-full max-w-full min-w-0 flex items-center justify-between p-2 sm:p-4 rounded-lg border hover:border-primary hover:bg-accent/50 transition-colors text-left group"
+                                    className="w-full flex items-center justify-between p-3 rounded-lg border bg-card hover:border-primary hover:bg-accent/50 transition-all text-left group min-h-[56px] active:scale-[0.99]"
                                 >
-                                    <div className="min-w-0 flex-1 mr-2 sm:mr-4">
-                                        <h4 className="font-semibold text-sm sm:text-base break-words leading-tight">{exercise.name}</h4>
-                                        <div className="text-[10px] sm:text-xs text-muted-foreground flex flex-wrap gap-1.5 mt-1">
+                                    <div className="min-w-0 flex-1 mr-3">
+                                        <h4 className="font-semibold text-sm break-words leading-tight">{exercise.name}</h4>
+                                        <div className="text-xs text-muted-foreground flex flex-wrap gap-1.5 mt-1">
                                             <span className="capitalize">{exercise.muscleGroup}</span>
                                             <span>•</span>
                                             <span className="capitalize">{exercise.category}</span>
                                         </div>
                                     </div>
-                                    <Check className="h-4 w-4 opacity-0 group-hover:opacity-50 text-primary shrink-0" />
+                                    <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/20 flex items-center justify-center group-hover:border-primary text-primary transition-colors">
+                                        <Check className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </div>
                                 </button>
                             ))}
                         </div>
                     )}
                 </div>
-            </DialogContent >
-        </Dialog >
+            </DialogContent>
+        </Dialog>
     )
 }

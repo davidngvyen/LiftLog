@@ -65,27 +65,28 @@ export default function WorkoutList({ workouts }: WorkoutListProps) {
     return (
         <div className="space-y-6">
             {/* Controls */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-card p-4 rounded-xl border">
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <Filter className="h-4 w-4 text-muted-foreground" />
-                    <div className="flex gap-2">
+            <div className="flex flex-col gap-3 bg-card p-3 sm:p-4 rounded-xl border">
+                {/* Filter badges - scrollable on mobile */}
+                <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <div className="flex gap-2 overflow-x-auto scrollbar-none">
                         <Badge
                             variant={statusFilter === 'ALL' ? 'default' : 'outline'}
-                            className="cursor-pointer hover:bg-primary/80 min-h-[44px] flex items-center"
+                            className="cursor-pointer hover:bg-primary/80 min-h-[36px] px-4 flex items-center shrink-0"
                             onClick={() => setStatusFilter('ALL')}
                         >
                             All
                         </Badge>
                         <Badge
                             variant={statusFilter === 'COMPLETED' ? 'default' : 'outline'}
-                            className="cursor-pointer hover:bg-primary/80 min-h-[44px] flex items-center"
+                            className="cursor-pointer hover:bg-primary/80 min-h-[36px] px-4 flex items-center shrink-0"
                             onClick={() => setStatusFilter('COMPLETED')}
                         >
                             Completed
                         </Badge>
                         <Badge
                             variant={statusFilter === 'PLANNED' ? 'default' : 'outline'}
-                            className="cursor-pointer hover:bg-primary/80 min-h-[44px] flex items-center"
+                            className="cursor-pointer hover:bg-primary/80 min-h-[36px] px-4 flex items-center shrink-0"
                             onClick={() => setStatusFilter('PLANNED')}
                         >
                             Planned
@@ -93,10 +94,11 @@ export default function WorkoutList({ workouts }: WorkoutListProps) {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+                {/* Sort dropdown */}
+                <div className="flex items-center gap-2">
+                    <ArrowUpDown className="h-4 w-4 text-muted-foreground shrink-0" />
                     <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as SortOrder)}>
-                        <SelectTrigger className="w-[140px] h-8">
+                        <SelectTrigger className="flex-1 sm:w-[160px] sm:flex-none h-10">
                             <SelectValue placeholder="Sort by" />
                         </SelectTrigger>
                         <SelectContent>
