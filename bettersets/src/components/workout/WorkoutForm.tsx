@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Loader2, Trash2 } from "lucide-react"
-import { useState } from "react"
+import { Loader2, Trash2, Upload, X } from "lucide-react"
+import { useState, useRef } from "react"
 import { createWorkout, updateWorkout } from "@/services/workout.service"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
@@ -38,6 +38,7 @@ export const formSchema = z.object({
         message: "Invalid date"
     }),
     notes: z.string().optional(),
+    imageUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
     exercises: z.array(exerciseSchema),
 })
 
@@ -52,6 +53,8 @@ interface WorkoutFormProps {
 export default function WorkoutForm({ userId, exercises: allExercises, initialData, onCancel, onSuccess }: WorkoutFormProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isUploading, setIsUploading] = useState(false)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -59,6 +62,7 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
             name: initialData?.name || "",
             date: initialData?.date ? new Date(initialData.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
             notes: initialData?.notes || "",
+            imageUrl: (initialData as any)?.imageUrl || "",
             exercises: initialData?.exercises.map(ex => ({
                 exerciseId: ex.exerciseId,
                 name: ex.exercise.name,
@@ -92,6 +96,45 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
         })
     }
 
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setIsUploading(true)
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+
+            if (!res.ok) {
+                throw new Error("Upload failed")
+            }
+
+            const data = await res.json()
+            if (data.url) {
+                form.setValue('imageUrl', data.url)
+                toast.success("Photo uploaded!")
+            }
+        } catch (error) {
+            console.error(error)
+            toast.error("Failed to upload photo.")
+        } finally {
+            setIsUploading(false)
+            // Reset input so same file can be selected again if needed
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ''
+            }
+        }
+    }
+
+    const clearImage = () => {
+        form.setValue('imageUrl', '')
+    }
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsSubmitting(true)
         try {
@@ -99,6 +142,7 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
                 name: values.name,
                 date: new Date(values.date),
                 notes: values.notes,
+                imageUrl: values.imageUrl,
                 exercises: values.exercises.map((ex, index) => ({
                     exerciseId: ex.exerciseId,
                     order: index,
@@ -173,6 +217,58 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
                         className="resize-none"
                         {...register("notes")}
                     />
+                </div>
+
+                <div className="space-y-4">
+                    <Label>Workout Photo</Label>
+
+                    {form.watch('imageUrl') ? (
+                        <div className="relative aspect-video w-full max-w-sm overflow-hidden rounded-lg border-2 border-black group">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={form.watch('imageUrl')}
+                                alt="Workout preview"
+                                className="h-full w-full object-cover"
+                            />
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={clearImage}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    ) : (
+                        <div
+                            className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/5 px-6 py-10 transition-colors hover:bg-muted/10"
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                                {isUploading ? (
+                                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                                ) : (
+                                    <Upload className="h-6 w-6 text-muted-foreground" />
+                                )}
+                            </div>
+                            <div className="text-center">
+                                <p className="text-sm font-medium">Click to upload photo</p>
+                                <p className="text-xs text-muted-foreground">Support for JPG, PNG, WEBP</p>
+                            </div>
+                        </div>
+                    )}
+
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        disabled={isUploading}
+                    />
+
+                    {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl.message}</p>}
                 </div>
             </div>
 

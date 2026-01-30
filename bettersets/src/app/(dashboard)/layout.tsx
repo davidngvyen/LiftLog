@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { PixelClouds } from "@/components/PixelClouds";
 import { AppProvider } from "@/components/providers/AppProvider";
 import { auth } from "@/lib/auth";
+import { MobileNav } from "@/components/layout/MobileNav";
 
 export default async function DashboardLayout({
   children,
@@ -37,12 +38,13 @@ export default async function DashboardLayout({
 
         <div className="lg:pl-56">
           <Header />
-          <main className="py-6">
+          <main className="py-6 pb-20 lg:pb-6">
             <div className="px-4 sm:px-6 lg:px-8 relative z-10">
               {children}
             </div>
           </main>
         </div>
+        <MobileNav />
       </div>
     </AppProvider>
   );

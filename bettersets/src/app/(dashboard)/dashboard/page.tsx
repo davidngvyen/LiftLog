@@ -7,6 +7,7 @@ import { useApp } from "@/components/providers/AppProvider";
 import { CharacterAvatar, CharacterCustomization } from "@/components/CharacterAvatar";
 import WorkoutCard from "@/components/workout/WorkoutCard"; // IMPORTED FOR YOU
 import { WorkoutWithExercises } from "@/types/workout"; // IMPORTED FOR YOU
+import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 
 interface Stats {
   workoutCount: number;
@@ -128,13 +129,7 @@ export default function DashboardPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <div className="border-4 border-black bg-primary p-4 animate-pulse">
-          <p className="text-xs uppercase text-white">LOADING QUEST DATA...</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

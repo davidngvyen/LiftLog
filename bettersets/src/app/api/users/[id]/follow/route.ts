@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redis, CacheKeys } from '@/lib/redis'
+import { CacheService } from '@/services/cache.service'
 import { enforceRateLimit } from '@/lib/security/ratelimit'
 
 export async function POST(
@@ -10,7 +11,7 @@ export async function POST(
 ) {
   try {
     const session = await auth()
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
@@ -67,9 +68,8 @@ export async function POST(
     const senderProfileKey = CacheKeys.profile(currentUserId)
 
     await Promise.all([
-      redis.del(followersKey),
-      redis.del(receiverProfileKey),
       redis.del(senderProfileKey),
+      CacheService.invalidateFeed(currentUserId), // 4. Invalidate sender's feed so they see new content
     ])
 
     return new NextResponse('Followed successfully', { status: 200 })
@@ -85,7 +85,7 @@ export async function DELETE(
 ) {
   try {
     const session = await auth()
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
@@ -113,9 +113,8 @@ export async function DELETE(
     const senderProfileKey = CacheKeys.profile(currentUserId)
 
     await Promise.all([
-      redis.del(followersKey),
-      redis.del(receiverProfileKey),
       redis.del(senderProfileKey),
+      CacheService.invalidateFeed(currentUserId),
     ])
 
     return new NextResponse('Unfollowed successfully', { status: 200 })

@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db'
 import { CreateWorkoutInput, workoutWithExercises } from '@/types/workout'
 import { revalidatePath } from 'next/cache'
 import { CacheService } from './cache.service'
+import { FeedService } from './feed.service'
 
 export async function getWorkouts(userId: string) {
     return CacheService.getWorkouts(userId, async () => {
@@ -68,8 +69,9 @@ export async function createWorkout(userId: string, data: CreateWorkoutInput) {
             data: {
                 userId,
                 name: data.name,
-                date: data.date || new Date(),
                 notes: data.notes,
+                imageUrl: data.imageUrl,
+                caption: data.caption,
                 startTime: data.startTime,
                 endTime: data.endTime,
                 exercises: {
@@ -101,6 +103,7 @@ export async function createWorkout(userId: string, data: CreateWorkoutInput) {
 
         revalidatePath('/workouts')
         await CacheService.invalidateWorkouts(userId)
+        await FeedService.invalidateFeedForFollowers(userId)
         return workout
     } catch (error) {
         console.error('Error creating workout:', error)
@@ -119,6 +122,8 @@ export async function updateWorkout(userId: string, data: { id: string } & Parti
                     name: data.name,
                     date: data.date,
                     notes: data.notes,
+                    imageUrl: data.imageUrl,
+                    caption: data.caption,
                     startTime: data.startTime,
                     endTime: data.endTime,
                 }

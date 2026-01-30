@@ -6,6 +6,7 @@ import { FeedItem } from './FeedItem'
 import { Loader2, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { FeedSkeleton } from '@/components/skeletons/FeedSkeleton'
 
 export function FeedList() {
     const [items, setItems] = useState<FeedItemType[]>([])
@@ -66,11 +67,7 @@ export function FeedList() {
     }, [hasMore, loading, cursor, fetchFeed])
 
     if (!initialized && loading) {
-        return (
-            <div className="flex justify-center py-10">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-        )
+        return <FeedSkeleton />
     }
 
     if (initialized && items.length === 0) {
@@ -87,7 +84,7 @@ export function FeedList() {
                 If not, we can just leave it as text or link to the main dashboard to start working out. 
                 I'll guess /search as a placeholder or just homepage. */}
                 <Button asChild className="uppercase font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                    <Link href="/">Find Warriors</Link>
+                    <Link href="/users">Find Warriors</Link>
                 </Button>
             </div>
         )

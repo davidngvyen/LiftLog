@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { FeedItem as FeedItemType } from '@/services/feed.service'
 // import { CharacterAvatar, CharacterCustomization } from '@/components/CharacterAvatar'
-import { Clock, Dumbbell, Calendar, ChevronRight, User } from 'lucide-react'
+import { Clock, Dumbbell, Calendar, ChevronRight, User, Trophy } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface FeedItemProps {
@@ -26,6 +26,22 @@ export function FeedItem({ item }: FeedItemProps) {
 
     // User character/avatar fallback
     //   const customization = item.user.character as CharacterCustomization || null
+
+    const imageUrl = (item as any).imageUrl
+
+    // Find PRs
+    const prs: any[] = []
+    exercises.forEach((ex: any) => {
+        ex.sets.forEach((set: any) => {
+            if (set.isPersonalRecord) {
+                prs.push({
+                    exerciseName: ex.exercise?.name,
+                    weight: set.weight,
+                    reps: set.reps
+                })
+            }
+        })
+    })
 
     return (
         <Card className="overflow-hidden border-4 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
@@ -53,6 +69,34 @@ export function FeedItem({ item }: FeedItemProps) {
                 <h3 className="mb-3 text-lg font-black uppercase leading-tight tracking-tight">
                     {item.name}
                 </h3>
+
+                {(item as any).caption && (
+                    <p className="mb-4 text-sm text-gray-700 italic border-l-4 border-primary pl-3 py-1 bg-primary/5">
+                        &quot;{(item as any).caption}&quot;
+                    </p>
+                )}
+
+                {/* Photo Context */}
+                {imageUrl && (
+                    <div className="mb-4 overflow-hidden rounded-lg border-2 border-black relative group">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={imageUrl}
+                            alt="Workout context"
+                            className="aspect-video w-full object-cover"
+                        />
+                        {/* Linked Data Overlay */}
+                        {prs.length > 0 && (
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/80 px-3 py-2 text-white transition-opacity">
+                                <div className="flex items-center gap-2 text-xs font-bold uppercase text-yellow-400">
+                                    <Trophy className="h-3 w-3" />
+                                    <span>{prs[0].exerciseName}: {prs[0].weight}lbs PR</span>
+                                    {prs.length > 1 && <span className="text-white/60 text-[10px] ml-auto">+{prs.length - 1} more</span>}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Stats Row */}
                 <div className="mb-4 flex gap-4 text-xs font-bold uppercase text-muted-foreground">
