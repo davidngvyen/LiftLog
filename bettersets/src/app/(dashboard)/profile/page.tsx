@@ -40,15 +40,61 @@ export default function ProfilePage() {
     const userLevel = Math.floor((user?.workoutCount || 0) / 5) + 1;
 
     const saveProfile = async () => {
-        // In real app, call API
+        try {
+            if (!user?.id) return
+
+            const res = await fetch(`/api/users/${user.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    bio,
+                }),
+            })
+
+            if (!res.ok) throw new Error('Failed to update profile')
+
+            const updatedUser = await res.json()
+            // Update context
+            updateCharacter(updatedUser.character) // Re-using updateCharacter for full user update or just relying on refresh?
+            // Actually useApp's setUser might be needed.
+            // Let's check useApp capabilities.
+            // For now, reload window or rely on optimistic?
+            // The plan said "Update user in DB".
+            // Ideally we update the context.
+            location.reload() // Simple way to ensure everything re-fetches including feed
+        } catch (error) {
+            console.error('Failed to update profile:', error)
+            // toast.error("Failed to update profile")
+        }
         setEditing(false);
-        // toast.success("Profile updated!");
     };
 
-    const saveCharacter = () => {
-        updateCharacter(tempCustomization);
-        setEditingCharacter(false);
-        // toast.success("Character updated!");
+    const saveCharacter = async () => {
+        try {
+            if (!user?.id) return
+
+            const res = await fetch(`/api/users/${user.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    character: tempCustomization,
+                }),
+            })
+
+            if (!res.ok) throw new Error('Failed to update character')
+
+            updateCharacter(tempCustomization);
+            setEditingCharacter(false);
+            // toast.success("Character updated!");
+        } catch (error) {
+            console.error('Failed to update character:', error)
+            // toast.error("Failed to update character")
+        }
     };
 
     const formatVolume = (volume: number) => {

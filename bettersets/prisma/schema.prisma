@@ -49,9 +49,11 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
+  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -59,6 +61,8 @@ model Session {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -97,6 +101,8 @@ model Workout {
   durationMins Int?
   notes        String?   @db.VarChar(1000)
   isCompleted  Boolean   @default(false)
+  imageUrl     String?
+  caption      String?   @db.VarChar(500)
 
   // Relations
   exercises WorkoutExercise[]

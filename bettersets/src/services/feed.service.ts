@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import { redis, CacheKeys } from '@/lib/redis'
+import { CacheService } from './cache.service'
 import { Workout } from '@prisma/client'
 
 const FEED_CACHE_TTL = 300 // 5 minutes
@@ -92,5 +93,30 @@ export const FeedService = {
     }
 
     return response
+    return response
+  },
+
+  invalidateFeedForFollowers: async (userId: string) => {
+    try {
+      // 1. Get all users following this user
+      const followers = await prisma.follow.findMany({
+        where: { followingId: userId },
+        select: { followerId: true }
+      })
+
+      if (followers.length === 0) return
+
+      // 2. Invalidate feed for each follower
+      // We process in chunks or parallel
+      const invalidationPromises = followers.map(f =>
+        CacheService.invalidateFeed(f.followerId)
+      )
+
+      await Promise.all(invalidationPromises)
+
+      console.log(`Invalidated feeds for ${followers.length} followers of user ${userId}`)
+    } catch (e) {
+      console.error('Error invalidating follower feeds:', e)
+    }
   }
 }

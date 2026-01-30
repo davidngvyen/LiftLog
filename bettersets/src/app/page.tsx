@@ -42,8 +42,8 @@ export default function AuthPage() {
             <Button
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="h-12 w-full border-4 border-black bg-primary text-black hover:bg-gray-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all active:shadow-none active:translate-x-2 active:translate-y-2 uppercase text-xs font-bold flex items-center justify-center gap-2"
-            >
+              className="h-12 w-full border-4 border-black bg-primary text-primary-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all active:shadow-none active:translate-x-2 active:translate-y-2 uppercase text-xs font-bold"
+              >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

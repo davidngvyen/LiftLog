@@ -43,5 +43,33 @@ export const CacheService = {
   invalidateWorkouts: async (userId: string) => {
     const key = `workouts:${userId}`
     await redis.del(key)
+  },
+
+  invalidateFeed: async (userId: string) => {
+    // Invalidate all feed pages for this user
+    // We use a wildcard pattern or just rely on the specific keys we know
+    // Since we can't easily do wildcard deletes in simple Redis without SCAN (which is expensive),
+    // and we might have many pages, a robust solution often uses a "version" key for the feed.
+    // However, for this scale, let's try to delete the most common keys or use a set to track them.
+
+    // ALTERNATIVE: Use a "flux" ID in the key that we rotate.
+    // Simpler here: We will just delete the "start" key and maybe the first few pages if clearable.
+    // ACTUALLY, checking feed.service.ts, the key is `feed:${userId}:${cursor || 'start'}`.
+
+    // For now, let's implement a 'version' based approach implicitly by just nuking the 'start' page
+    // which forces a refresh. But deeper pages might be stale.
+    // BETTER: Use SCAN to delete `feed:${userId}:*`.
+
+    // Implementation with SCAN for safety/correctness (even if slightly slower)
+    let cursor = '0'
+    const match = CacheKeys.feed(userId) + ':*'
+
+    do {
+      const [nextCursor, keys] = await redis.scan(cursor, { match, count: 100 })
+      cursor = nextCursor
+      if (keys.length > 0) {
+        await redis.del(...keys)
+      }
+    } while (cursor !== '0')
   }
 }

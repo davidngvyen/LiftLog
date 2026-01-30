@@ -37,6 +37,8 @@ export type CreateWorkoutInput = {
     startTime?: Date
     endTime?: Date
     notes?: string
+    imageUrl?: string
+    caption?: string
     exercises: CreateWorkoutExerciseInput[]
 }
 
