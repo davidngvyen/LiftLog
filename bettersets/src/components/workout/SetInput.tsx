@@ -21,13 +21,100 @@ interface SetInputProps {
     className?: string
 }
 
+interface ControlledNumberInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    control: any
+    name: string
+    onEnter?: () => void
+}
+
+function ControlledNumberInput({ control, name, onEnter, className, ...props }: ControlledNumberInputProps) {
+    return (
+        <Controller
+            control={control}
+            name={name}
+            render={({ field: { value, onChange, onBlur } }) => {
+                // We use local state to track exactly what the user types (e.g. "1.")
+                // while syncing the parsed number to the form.
+                const [localValue, setLocalValue] = React.useState<string>(value?.toString() ?? "")
+
+                // Sync local value when form value changes externally (e.g. initial load or reset)
+                React.useEffect(() => {
+                    if (value === undefined || value === null) {
+                        setLocalValue("")
+                    } else {
+                        // Only update if the parsed local value doesn't match the form value
+                        // This prevents jumping cursor/format when typing e.g. "1.0" vs "1"
+                        if (parseFloat(localValue) !== value) {
+                            setLocalValue(value.toString())
+                        }
+                    }
+                }, [value])
+
+                const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                    const rawValue = e.target.value
+                    setLocalValue(rawValue)
+
+                    if (rawValue === "") {
+                        onChange(0) // Default to 0 if empty
+                        return
+                    }
+
+                    const parsed = parseFloat(rawValue)
+                    if (!isNaN(parsed)) {
+                        onChange(parsed)
+                    }
+                }
+
+                const handleBlur = () => {
+                    onBlur()
+                    // On blur, normalize the display value
+                    if (value !== undefined && value !== null) {
+                        setLocalValue(value.toString())
+                    }
+                }
+
+                const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault()
+                        onEnter?.()
+                    }
+                }
+
+                return (
+                    <Input
+                        {...props}
+                        className={className}
+                        value={localValue}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        onKeyDown={handleKeyDown}
+                    />
+                )
+            }}
+        />
+    )
+}
+
 export default function SetInput({ form, exerciseIndex, className }: SetInputProps) {
     const { fields, append, remove } = useFieldArray({
         control: form.control,
         name: `exercises.${exerciseIndex}.sets`
     })
 
-    const { register, control } = form
+    const { control, getValues } = form
+
+    const handleAddSet = () => {
+        const currentSets = getValues(`exercises.${exerciseIndex}.sets`)
+        const lastSet = currentSets && currentSets.length > 0 ? currentSets[currentSets.length - 1] : null;
+
+        append({
+            setNumber: fields.length + 1,
+            reps: lastSet ? Number(lastSet.reps) : 0,
+            weight: lastSet ? Number(lastSet.weight) : 0,
+            rpe: lastSet ? lastSet.rpe : 8,
+            isWarmup: lastSet ? lastSet.isWarmup : false
+        })
+    }
 
     return (
         <div className={cn("space-y-3 mt-4", className)}>
@@ -51,6 +138,7 @@ export default function SetInput({ form, exerciseIndex, className }: SetInputPro
                                 <Controller
                                     control={control}
                                     name={`exercises.${exerciseIndex}.sets.${index}.isWarmup`}
+                                    defaultValue={(field as any).isWarmup}
                                     render={({ field }) => (
                                         <label className="flex items-center gap-1.5 text-xs">
                                             <Checkbox
@@ -76,25 +164,25 @@ export default function SetInput({ form, exerciseIndex, className }: SetInputPro
                         <div className="grid grid-cols-3 gap-2">
                             <div>
                                 <label className="text-xs text-muted-foreground">Weight</label>
-                                <Input
+                                <ControlledNumberInput
+                                    control={control}
+                                    name={`exercises.${exerciseIndex}.sets.${index}.weight`}
+                                    placeholder="0"
                                     type="number"
                                     step="0.01"
-                                    placeholder="0"
-                                    {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
-                                        valueAsNumber: true
-                                    })}
                                     className="h-10"
+                                    onEnter={handleAddSet}
                                 />
                             </div>
                             <div>
                                 <label className="text-xs text-muted-foreground">Reps</label>
-                                <Input
-                                    type="number"
+                                <ControlledNumberInput
+                                    control={control}
+                                    name={`exercises.${exerciseIndex}.sets.${index}.reps`}
                                     placeholder="0"
-                                    {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
-                                        valueAsNumber: true
-                                    })}
+                                    type="number"
                                     className="h-10"
+                                    onEnter={handleAddSet}
                                 />
                             </div>
                             <div>
@@ -102,6 +190,7 @@ export default function SetInput({ form, exerciseIndex, className }: SetInputPro
                                 <Controller
                                     control={control}
                                     name={`exercises.${exerciseIndex}.sets.${index}.rpe`}
+                                    defaultValue={(field as any).rpe}
                                     render={({ field }) => (
                                         <Select
                                             value={field.value?.toString()}
@@ -131,28 +220,29 @@ export default function SetInput({ form, exerciseIndex, className }: SetInputPro
                             {index + 1}
                         </div>
                         <div className="flex-1">
-                            <Input
+                            <ControlledNumberInput
+                                control={control}
+                                name={`exercises.${exerciseIndex}.sets.${index}.weight`}
+                                placeholder="Weight"
                                 type="number"
                                 step="0.01"
-                                placeholder="Weight"
-                                {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
-                                    valueAsNumber: true
-                                })}
+                                onEnter={handleAddSet}
                             />
                         </div>
                         <div className="flex-1">
-                            <Input
-                                type="number"
+                            <ControlledNumberInput
+                                control={control}
+                                name={`exercises.${exerciseIndex}.sets.${index}.reps`}
                                 placeholder="Reps"
-                                {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
-                                    valueAsNumber: true
-                                })}
+                                type="number"
+                                onEnter={handleAddSet}
                             />
                         </div>
                         <div className="w-16">
                             <Controller
                                 control={control}
                                 name={`exercises.${exerciseIndex}.sets.${index}.rpe`}
+                                defaultValue={(field as any).rpe}
                                 render={({ field }) => (
                                     <Select
                                         value={field.value?.toString()}
@@ -177,6 +267,7 @@ export default function SetInput({ form, exerciseIndex, className }: SetInputPro
                             <Controller
                                 control={control}
                                 name={`exercises.${exerciseIndex}.sets.${index}.isWarmup`}
+                                defaultValue={(field as any).isWarmup}
                                 render={({ field }) => (
                                     <Checkbox
                                         id={`warmup-${index}`}
@@ -204,13 +295,7 @@ export default function SetInput({ form, exerciseIndex, className }: SetInputPro
                 variant="outline"
                 size="sm"
                 className="w-full mt-2"
-                onClick={() => append({
-                    setNumber: fields.length + 1,
-                    reps: 0,
-                    weight: 0,
-                    rpe: 8,
-                    isWarmup: false
-                })}
+                onClick={handleAddSet}
             >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Set
