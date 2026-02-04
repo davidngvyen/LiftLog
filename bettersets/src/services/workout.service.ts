@@ -72,6 +72,7 @@ export async function createWorkout(userId: string, data: CreateWorkoutInput) {
                 notes: data.notes,
                 imageUrl: data.imageUrl,
                 caption: data.caption,
+                isCompleted: data.isCompleted ?? true, // Default to true if not specified for backward compat, or check UI logic
                 startTime: data.startTime,
                 endTime: data.endTime,
                 exercises: {
@@ -104,6 +105,12 @@ export async function createWorkout(userId: string, data: CreateWorkoutInput) {
         revalidatePath('/workouts')
         await CacheService.invalidateWorkouts(userId)
         await FeedService.invalidateFeedForFollowers(userId)
+
+        if (data.advanceActivePlan) {
+            const { advancePlanDay } = await import('./workout-plan.service')
+            await advancePlanDay(userId)
+        }
+
         return workout
     } catch (error) {
         console.error('Error creating workout:', error)
@@ -124,6 +131,7 @@ export async function updateWorkout(userId: string, data: { id: string } & Parti
                     notes: data.notes,
                     imageUrl: data.imageUrl,
                     caption: data.caption,
+                    isCompleted: data.isCompleted,
                     startTime: data.startTime,
                     endTime: data.endTime,
                 }

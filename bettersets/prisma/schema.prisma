@@ -23,11 +23,16 @@ model User {
 
   // Relations
   workouts      Workout[]
+  workoutPlans  WorkoutPlan[]
   following     Follow[]  @relation("follower")
   followers     Follow[]  @relation("following")
 
   // Indexes
   @@index([name])
+
+  // Workout Plan Tracking
+  activePlanId   String?
+  activeDayIndex Int     @default(0)
 }
 
 model Account {
@@ -84,7 +89,8 @@ model Exercise {
   tips         String?
 
   // Relations
-  workoutExercises WorkoutExercise[]
+  workoutExercises     WorkoutExercise[]
+  workoutPlanExercises WorkoutPlanExercise[]
 
   // Indexes
   @@index([category])
@@ -167,4 +173,48 @@ model RateLimitLog {
   createdAt DateTime @default(now())
 
   @@index([ip, createdAt])
+}
+
+model WorkoutPlan {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  days WorkoutPlanDay[]
+
+  @@index([userId])
+}
+
+model WorkoutPlanDay {
+  id     String      @id @default(cuid())
+  planId String
+  plan   WorkoutPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  name   String
+  order  Int
+
+  exercises WorkoutPlanExercise[]
+
+  @@index([planId])
+}
+
+model WorkoutPlanExercise {
+  id         String         @id @default(cuid())
+  dayId      String
+  day        WorkoutPlanDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise       @relation(fields: [exerciseId], references: [id])
+  order      Int
+  sets       Int
+  reps       Int?
+  duration   Int? // in seconds
+  notes      String?
+  targetRpe  Int?
+
+  @@index([dayId])
+  @@index([exerciseId])
 }

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import { redirect } from "next/navigation"
+import { getActivePlan } from "@/services/workout-plan.service"
+import ActivePlanCard from "@/components/workout/ActivePlanCard"
 
 export const metadata = {
   title: "Workouts | BetterSets",
@@ -18,7 +20,10 @@ export default async function WorkoutsPage() {
     redirect("/auth/signin")
   }
 
-  const workouts = await getWorkouts(session.user.id)
+  const [workouts, activePlanData] = await Promise.all([
+    getWorkouts(session.user.id),
+    getActivePlan(session.user.id)
+  ])
 
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -36,6 +41,14 @@ export default async function WorkoutsPage() {
           </Link>
         </Button>
       </div>
+
+      {activePlanData && (
+        <ActivePlanCard
+          plan={activePlanData.plan}
+          activeDayIndex={activePlanData.activeDayIndex}
+          activeDay={activePlanData.activeDay}
+        />
+      )}
 
       <div className="border-t pt-6">
         <WorkoutList workouts={workouts} />

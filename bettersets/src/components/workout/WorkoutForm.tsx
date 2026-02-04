@@ -46,24 +46,29 @@ interface WorkoutFormProps {
     userId: string
     exercises: Exercise[]
     initialData?: WorkoutWithExercises
+    templateData?: WorkoutWithExercises
+    advanceActivePlan?: boolean
     onCancel?: () => void
     onSuccess?: (workout: WorkoutWithExercises) => void
 }
 
-export default function WorkoutForm({ userId, exercises: allExercises, initialData, onCancel, onSuccess }: WorkoutFormProps) {
+export default function WorkoutForm({ userId, exercises: allExercises, initialData, templateData, advanceActivePlan, onCancel, onSuccess }: WorkoutFormProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isUploading, setIsUploading] = useState(false)
+    const [submitAction, setSubmitAction] = useState<'LOG' | 'PLAN'>('LOG')
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const defaultData = initialData || templateData
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: initialData?.name || "",
+            name: defaultData?.name || "",
             date: initialData?.date ? new Date(initialData.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-            notes: initialData?.notes || "",
-            imageUrl: (initialData as any)?.imageUrl || "",
-            exercises: initialData?.exercises.map(ex => ({
+            notes: defaultData?.notes || "",
+            imageUrl: (defaultData as any)?.imageUrl || "",
+            exercises: defaultData?.exercises.map(ex => ({
                 exerciseId: ex.exerciseId,
                 name: ex.exercise.name,
                 muscleGroup: ex.exercise.muscleGroup,
@@ -150,7 +155,9 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
                         ...set,
                         setNumber: setIndex + 1,
                     }))
-                }))
+                })),
+                advanceActivePlan: advanceActivePlan,
+                isCompleted: submitAction === 'LOG'
             }
 
             let result: WorkoutWithExercises
@@ -164,7 +171,11 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
                 result = await createWorkout(userId, workoutData) as unknown as WorkoutWithExercises
             }
 
-            toast.success(initialData ? "Workout updated successfully!" : "Workout created successfully!")
+            toast.success(
+                initialData
+                    ? "Workout updated successfully!"
+                    : (submitAction === 'PLAN' ? "Workout planned!" : "Workout logged!")
+            )
 
             if (onSuccess) {
                 onSuccess(result)
@@ -327,10 +338,26 @@ export default function WorkoutForm({ userId, exercises: allExercises, initialDa
                 <Button type="button" variant="outline" onClick={onCancel ? onCancel : () => router.back()}>
                     Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting} size="lg">
-                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {initialData ? "Save Changes" : "Save Workout"}
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        variant="secondary"
+                        onClick={() => setSubmitAction('PLAN')}
+                    >
+                        {isSubmitting && submitAction === 'PLAN' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {initialData ? "Save as Planned" : "Plan Workout"}
+                    </Button>
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        size="lg"
+                        onClick={() => setSubmitAction('LOG')}
+                    >
+                        {isSubmitting && submitAction === 'LOG' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {initialData ? "Save Changes" : "Log Workout"}
+                    </Button>
+                </div>
             </div>
 
         </form>

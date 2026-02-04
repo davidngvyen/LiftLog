@@ -40,6 +40,8 @@ export type CreateWorkoutInput = {
     imageUrl?: string
     caption?: string
     exercises: CreateWorkoutExerciseInput[]
+    advanceActivePlan?: boolean
+    isCompleted?: boolean
 }
 
 export type UpdateWorkoutInput = Partial<CreateWorkoutInput> & {
